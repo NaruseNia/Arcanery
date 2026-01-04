@@ -1,0 +1,38 @@
+modLoader = "javafml"
+loaderVersion = "[2,)"
+#issueTrackerURL = ""
+license = "MIT"
+
+[[mods]]
+modId = "arcanery"
+version = "${version}"
+displayName = "Arcanery"
+authors = ""
+description = '''
+
+'''
+#logoFile = ""
+
+[[dependencies.arcanery]]
+modId = "neoforge"
+type = "required"
+versionRange = "[21,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.arcanery]]
+modId = "minecraft"
+type = "required"
+versionRange = "[1.21.11,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.arcanery]]
+modId = "architectury"
+type = "required"
+versionRange = "[19.0.1,)"
+ordering = "AFTER"
+side = "BOTH"
+
+[[mixins]]
+config = "arcanery.mixins.json"
