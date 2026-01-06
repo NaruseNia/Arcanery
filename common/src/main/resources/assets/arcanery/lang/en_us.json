@@ -1,4 +1,12 @@
 {
   "item.arcanery.test_item": "Test Item",
-  "item.arcanery.potion": "Potion"
+  "item.arcanery.potion": "Potion",
+  "item.arcanery.element.none": "None",
+  "item.arcanery.element.fire": "Fire",
+  "item.arcanery.element.water": "Water",
+  "item.arcanery.element.earth": "Earth",
+  "item.arcanery.element.air": "Air",
+  "item.arcanery.element.light": "Light",
+  "item.arcanery.element.darkness": "Darkness",
+  "itemTooltip.arcanery.ingredient.line0": "%s (%d)"
 }
