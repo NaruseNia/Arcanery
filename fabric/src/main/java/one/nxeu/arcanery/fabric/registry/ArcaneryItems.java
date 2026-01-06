@@ -7,6 +7,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.Item;
 import one.nxeu.arcanery.Arcanery;
+import one.nxeu.arcanery.fabric.data.ElementComponent;
 import one.nxeu.arcanery.fabric.item.ArcaneryPotionItem;
 import one.nxeu.arcanery.fabric.item.IngredientItem;
 
@@ -19,10 +20,10 @@ public class ArcaneryItems {
 
     // Ingredients ===================================
     // > Herbs
-    public static final IngredientItem FIREBELL = registerIngredient("firebell", IngredientItem::new, new IngredientItem.Properties());
-    public static final IngredientItem WINDBLOOM = registerIngredient("windbloom", IngredientItem::new, new IngredientItem.Properties());
-    public static final IngredientItem WATERBLOOM = registerIngredient("waterbloom", IngredientItem::new, new IngredientItem.Properties());
-    public static final IngredientItem TERRARIA = registerIngredient("terraria", IngredientItem::new, new IngredientItem.Properties());
+    public static final IngredientItem FIREBELL = registerIngredient("firebell", builder -> builder.fire(1.0f).explosion(0.5f));
+    public static final IngredientItem WINDBLOOM = registerIngredient("windbloom", builder -> builder.air(1.0f));
+    public static final IngredientItem WATERBLOOM = registerIngredient("waterbloom", builder -> builder.water(1.0f));
+    public static final IngredientItem TERRARIA = registerIngredient("terraria", builder -> builder.earth(1.0f));
     public static final IngredientItem LIFELEAF = registerIngredient("lifeleaf", IngredientItem::new, new IngredientItem.Properties());
     public static final IngredientItem TANGLEWEED = registerIngredient("tangleweed", IngredientItem::new, new IngredientItem.Properties());
     public static final IngredientItem GOLDTHORN = registerIngredient("goldthorn", IngredientItem::new, new IngredientItem.Properties());
@@ -95,6 +96,14 @@ public class ArcaneryItems {
         TItem item = factory.apply(settings.setId(key));
         Registry.register(BuiltInRegistries.ITEM, key, item);
 
+        return item;
+    }
+
+    public static IngredientItem registerIngredient(String path, Function<ElementComponent.Builder, ElementComponent.Builder> elementsFactory) {
+        ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath(Arcanery.MOD_ID, path));
+        ElementComponent elements = elementsFactory.apply(ElementComponent.builder()).build();
+        IngredientItem item = new IngredientItem(new Item.Properties().setId(key), elements);
+        Registry.register(BuiltInRegistries.ITEM, key, item);
         return item;
     }
 

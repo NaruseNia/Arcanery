@@ -8,9 +8,9 @@ import one.nxeu.arcanery.Arcanery;
 
 @SuppressWarnings("unused")
 public class ArcaneryDataComponents {
-    public static DataComponentType<ElementComponent> ELEMENT = Registry.register(
+    public static DataComponentType<ElementComponent> ELEMENTS = Registry.register(
             BuiltInRegistries.DATA_COMPONENT_TYPE,
-            Identifier.fromNamespaceAndPath(Arcanery.MOD_ID, "element"),
+            Identifier.fromNamespaceAndPath(Arcanery.MOD_ID, "elements"),
             DataComponentType.<ElementComponent>builder().persistent(ElementComponent.CODEC).build()
     );
 
