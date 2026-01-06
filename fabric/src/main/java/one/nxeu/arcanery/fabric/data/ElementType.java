@@ -4,12 +4,14 @@ import com.mojang.serialization.Codec;
 
 public enum ElementType {
     NONE,
-    FIRE,
-    WATER,
-    EARTH,
     AIR,
-    LIGHT,
-    DARKNESS;
+    DEATH,
+    EARTH,
+    EXPLOSION,
+    FIRE,
+    LIFE,
+    MAGIC,
+    WATER;
 
     public static final Codec<ElementType> CODEC = Codec.stringResolver(
             ElementType::name,

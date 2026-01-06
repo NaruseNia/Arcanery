@@ -2,11 +2,13 @@
   "item.arcanery.test_item": "Test Item",
   "item.arcanery.potion": "Potion",
   "item.arcanery.element.none": "None",
-  "item.arcanery.element.fire": "Fire",
-  "item.arcanery.element.water": "Water",
-  "item.arcanery.element.earth": "Earth",
   "item.arcanery.element.air": "Air",
-  "item.arcanery.element.light": "Light",
-  "item.arcanery.element.darkness": "Darkness",
+  "item.arcanery.element.death": "Death",
+  "item.arcanery.element.earth": "Earth",
+  "item.arcanery.element.explosion": "Explosion",
+  "item.arcanery.element.fire": "Fire",
+  "item.arcanery.element.life": "Life",
+  "item.arcanery.element.magic": "Magic",
+  "item.arcanery.element.water": "Water",
   "itemTooltip.arcanery.ingredient.line0": "%s (%d)"
 }
