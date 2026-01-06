@@ -11,6 +11,7 @@ import one.nxeu.arcanery.fabric.data.ElementComponent;
 import one.nxeu.arcanery.fabric.item.ArcaneryPotionItem;
 import one.nxeu.arcanery.fabric.item.IngredientItem;
 
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 @SuppressWarnings("unused")
@@ -99,12 +100,20 @@ public class ArcaneryItems {
         return item;
     }
 
-    public static IngredientItem registerIngredient(String path, Function<ElementComponent.Builder, ElementComponent.Builder> elementsFactory) {
+    public static <TItem extends IngredientItem> TItem registerIngredient(String path, BiFunction<Item.Properties, ElementComponent, TItem> factory, Item.Properties settings, ElementComponent elements) {
         ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath(Arcanery.MOD_ID, path));
-        ElementComponent elements = elementsFactory.apply(ElementComponent.builder()).build();
-        IngredientItem item = new IngredientItem(new Item.Properties().setId(key), elements);
+        TItem item = factory.apply(settings.setId(key), elements);
         Registry.register(BuiltInRegistries.ITEM, key, item);
+
         return item;
+    }
+
+    public static IngredientItem registerIngredient(String path, Function<ElementComponent.Builder, ElementComponent.Builder> elementsFactory) {
+        ElementComponent.Builder builder = ElementComponent.builder();
+        elementsFactory.apply(builder);
+        ElementComponent elements = builder.build();
+
+        return registerIngredient(path, IngredientItem::new, new IngredientItem.Properties(), elements);
     }
 
     @SuppressWarnings("EmptyMethod")
