@@ -19,6 +19,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import one.nxeu.arcanery.fabric.block.BrewersCauldronBlock;
 import one.nxeu.arcanery.fabric.data.ElementData;
 import one.nxeu.arcanery.fabric.registry.ArcaneryBlockEntities;
 import one.nxeu.arcanery.fabric.registry.ArcaneryDataComponents;
@@ -41,9 +42,9 @@ public class BrewersCauldronBlockEntity extends BlockEntity implements SimpleInv
                     pos.getY() + 1.0,
                     pos.getZ() + 0.5,
                     3,
-                    0.2,
+                    0.15,
                     0.0,
-                    0.2,
+                    0.15,
                     0.0
             );
         }
@@ -64,6 +65,7 @@ public class BrewersCauldronBlockEntity extends BlockEntity implements SimpleInv
                 entity.setChanged();
                 itemEntity.setItem(stack.copyWithCount(stack.getCount() - 1));
 
+                BrewersCauldronBlock.spawnSplash(level, pos);
                 level.playLocalSound(pos, SoundEvents.BREWING_STAND_BREW, SoundSource.BLOCKS, 1.0F, 1.0F, false);
             }
         }

@@ -3,6 +3,7 @@ package one.nxeu.arcanery.fabric.block;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -30,6 +31,7 @@ import one.nxeu.arcanery.fabric.block.entity.BrewersCauldronBlockEntity;
 import one.nxeu.arcanery.fabric.registry.ArcaneryBlockEntities;
 import one.nxeu.arcanery.fabric.registry.ArcaneryDataComponents;
 import one.nxeu.arcanery.fabric.registry.ArcaneryItems;
+import one.nxeu.arcanery.fabric.util.ParticleUtil;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
@@ -39,6 +41,21 @@ public class BrewersCauldronBlock extends BaseEntityBlock {
 
     public BrewersCauldronBlock(Properties properties) {
         super(properties);
+    }
+
+    public static void spawnSplash(Level level, BlockPos pos) {
+        ParticleUtil.spawnServerParticle(
+                level,
+                ParticleTypes.SPLASH,
+                pos.getX() + 0.5,
+                pos.getY() + 1.0,
+                pos.getZ() + 0.5,
+                10,
+                0.15,
+                0.0,
+                0.15,
+                0.1
+        );
     }
 
     @Override
@@ -70,6 +87,7 @@ public class BrewersCauldronBlock extends BaseEntityBlock {
                 final var containedElements = brewersCauldron.containedElements();
                 player.playSound(SoundEvents.RESPAWN_ANCHOR_CHARGE);
                 player.displayClientMessage(Component.literal(containedElements.toFormattedString()), true);
+                spawnSplash(level, pos);
                 return InteractionResult.SUCCESS;
             }
             if (stack.has(DataComponents.POTION_CONTENTS) && stack.getItem() instanceof PotionItem) {
