@@ -69,7 +69,7 @@ public class BrewersCauldronBlock extends BaseEntityBlock {
             if (stack.isEmpty()) {
                 final var containedElements = brewersCauldron.containedElements();
                 player.playSound(SoundEvents.RESPAWN_ANCHOR_CHARGE);
-                player.displayClientMessage(Component.literal("Contained Elements: " + containedElements.toString()), true);
+                player.displayClientMessage(Component.literal(containedElements.toFormattedString()), true);
                 return InteractionResult.SUCCESS;
             }
             if (stack.has(DataComponents.POTION_CONTENTS) && stack.getItem() instanceof PotionItem) {

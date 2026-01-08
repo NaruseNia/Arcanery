@@ -97,4 +97,24 @@ public class ElementData {
         view.putFloat("magic", magic);
         view.putFloat("water", water);
     }
+
+    public String toFormattedString() {
+        var builder = new StringBuilder();
+
+        if (isEmpty()) {
+            builder.append("No elements contained");
+            return builder.toString();
+        }
+
+        builder.append("Air:").append(air)
+                .append(" Death:").append(death)
+                .append(" Earth:").append(earth)
+                .append(" Explosion:").append(explosion)
+                .append(" Fire:").append(fire)
+                .append(" Life:").append(life)
+                .append(" Magic:").append(magic)
+                .append(" Water:").append(water);
+
+        return builder.toString();
+    }
 }
