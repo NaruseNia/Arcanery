@@ -7,7 +7,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.Item;
 import one.nxeu.arcanery.Arcanery;
-import one.nxeu.arcanery.fabric.data.ElementComponent;
+import one.nxeu.arcanery.fabric.data.ElementData;
 import one.nxeu.arcanery.fabric.item.ArcaneryPotionItem;
 import one.nxeu.arcanery.fabric.item.IngredientItem;
 
@@ -100,7 +100,7 @@ public class ArcaneryItems {
         return item;
     }
 
-    public static <TItem extends IngredientItem> TItem registerIngredient(String path, BiFunction<Item.Properties, ElementComponent, TItem> factory, Item.Properties settings, ElementComponent elements) {
+    public static <TItem extends IngredientItem> TItem registerIngredient(String path, BiFunction<Item.Properties, ElementData, TItem> factory, Item.Properties settings, ElementData elements) {
         ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath(Arcanery.MOD_ID, path));
         TItem item = factory.apply(settings.setId(key), elements);
         Registry.register(BuiltInRegistries.ITEM, key, item);
@@ -108,10 +108,10 @@ public class ArcaneryItems {
         return item;
     }
 
-    public static IngredientItem registerIngredient(String path, Function<ElementComponent.Builder, ElementComponent.Builder> elementsFactory) {
-        ElementComponent.Builder builder = ElementComponent.builder();
+    public static IngredientItem registerIngredient(String path, Function<ElementData.Builder, ElementData.Builder> elementsFactory) {
+        ElementData.Builder builder = ElementData.builder();
         elementsFactory.apply(builder);
-        ElementComponent elements = builder.build();
+        ElementData elements = builder.build();
 
         return registerIngredient(path, IngredientItem::new, new IngredientItem.Properties(), elements);
     }
