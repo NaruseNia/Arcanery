@@ -2,7 +2,6 @@ package one.nxeu.arcanery.fabric.block;
 
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.particles.SpellParticleOption;
 import net.minecraft.network.chat.Component;
@@ -12,8 +11,8 @@ import net.minecraft.util.Util;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BottleItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.PotionItem;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.Level;
@@ -91,10 +90,8 @@ public class BrewersCauldronBlock extends BaseEntityBlock {
                 spawnSplash(level, pos);
                 return InteractionResult.SUCCESS;
             }
-            if (stack.has(DataComponents.POTION_CONTENTS) && stack.getItem() instanceof PotionItem) {
-                final var potion = stack.get(DataComponents.POTION_CONTENTS);
+            if (stack.getItem() instanceof BottleItem) {
                 final var elements = brewersCauldron.containedElements();
-                if (potion != null && potion.hasEffects()) return InteractionResult.PASS;
                 if (elements.isEmpty()) return InteractionResult.PASS;
 
                 if (player.gameMode() != GameType.CREATIVE) stack.setCount(stack.getCount() - 1);
