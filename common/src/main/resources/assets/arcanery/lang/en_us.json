@@ -1,8 +1,10 @@
 {
+  "itemGroup.arcanery.arcanery_ingredients": "Arcanery Ingredients",
+  "itemGroup.arcanery.arcanery_blocks": "Arcanery Blocks",
   "item.arcanery.test_item": "Test Item",
   "item.arcanery.potion": "Potion",
   "item.arcanery.brewers_cauldron": "Brewer's Cauldron",
-  "item.arcanery.element.none": "None",
+  "item.arcanery.element.empty": "No Elements",
   "item.arcanery.element.air": "Air",
   "item.arcanery.element.death": "Death",
   "item.arcanery.element.earth": "Earth",

@@ -2,10 +2,7 @@ package one.nxeu.arcanery.fabric;
 
 import net.fabricmc.api.ModInitializer;
 import one.nxeu.arcanery.Arcanery;
-import one.nxeu.arcanery.fabric.registry.ArcaneryBlockEntities;
-import one.nxeu.arcanery.fabric.registry.ArcaneryBlocks;
-import one.nxeu.arcanery.fabric.registry.ArcaneryDataComponents;
-import one.nxeu.arcanery.fabric.registry.ArcaneryItems;
+import one.nxeu.arcanery.fabric.registry.*;
 
 public final class ArcaneryFabric implements ModInitializer {
     @Override
@@ -16,9 +13,13 @@ public final class ArcaneryFabric implements ModInitializer {
 
         // Run our common setup.
         Arcanery.init();
+
         ArcaneryDataComponents.init();
+
         ArcaneryBlockEntities.init();
         ArcaneryBlocks.init();
         ArcaneryItems.init();
+
+        ArcaneryItemGroups.register();
     }
 }

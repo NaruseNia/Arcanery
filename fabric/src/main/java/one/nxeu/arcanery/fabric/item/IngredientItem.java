@@ -35,6 +35,10 @@ public class IngredientItem extends Item {
     public void appendHoverText(@NonNull ItemStack itemStack, @NonNull TooltipContext tooltipContext, @NonNull TooltipDisplay tooltipDisplay, @NonNull Consumer<Component> consumer, @NonNull TooltipFlag tooltipFlag) {
         var elements = itemStack.get(ArcaneryDataComponents.ELEMENTS);
         if (elements == null) return;
+        if (elements.isEmpty()) {
+            consumer.accept(Component.translatable("item.arcanery.element.empty"));
+            return;
+        }
         var elementsMap = ElementData.toMap(elements);
         elementsMap.forEach((element, value) -> {
             if (value > 0f) {
