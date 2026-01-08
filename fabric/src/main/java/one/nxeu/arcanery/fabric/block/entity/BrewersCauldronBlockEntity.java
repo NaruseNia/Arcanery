@@ -41,7 +41,7 @@ public class BrewersCauldronBlockEntity extends BlockEntity implements SimpleInv
                     pos.getX() + 0.5,
                     pos.getY() + 1.0,
                     pos.getZ() + 0.5,
-                    3,
+                    1,
                     0.15,
                     0.0,
                     0.15,
