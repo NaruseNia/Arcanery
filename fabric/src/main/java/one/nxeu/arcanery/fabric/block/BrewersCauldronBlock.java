@@ -4,6 +4,7 @@ import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.particles.SpellParticleOption;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -101,6 +102,18 @@ public class BrewersCauldronBlock extends BaseEntityBlock {
 
                 result.set(ArcaneryDataComponents.ELEMENTS, elements);
                 level.playLocalSound(pos, SoundEvents.BREWING_STAND_BREW, SoundSource.BLOCKS, 1.0F, 1.0F, false);
+                ParticleUtil.spawnServerParticle(
+                        level,
+                        SpellParticleOption.create(ParticleTypes.EFFECT, 0xffffff, 0.5f),
+                        pos.getX() + 0.5,
+                        pos.getY() + 1.0,
+                        pos.getZ() + 0.5,
+                        10,
+                        0.2,
+                        0.1,
+                        0.2,
+                        0.05
+                );
                 brewersCauldron.clearContainedElements();
 
                 if (!player.getInventory().add(result)) {
