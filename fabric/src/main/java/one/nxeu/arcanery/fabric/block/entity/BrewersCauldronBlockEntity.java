@@ -100,7 +100,17 @@ public class BrewersCauldronBlockEntity extends BlockEntity implements SimpleInv
         return ClientboundBlockEntityDataPacket.create(this);
     }
 
-    public ElementData getContainedElements() {
+    public ElementData containedElements() {
         return containedElements;
+    }
+
+    public void clearContainedElements() {
+        this.containedElements = ElementData.empty();
+        setChanged();
+    }
+
+    public void containedElements(ElementData elements) {
+        this.containedElements = elements;
+        setChanged();
     }
 }

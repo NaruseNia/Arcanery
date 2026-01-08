@@ -2,12 +2,18 @@ package one.nxeu.arcanery.fabric.block;
 
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Util;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.PotionItem;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
@@ -22,6 +28,8 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import one.nxeu.arcanery.fabric.block.entity.BrewersCauldronBlockEntity;
 import one.nxeu.arcanery.fabric.registry.ArcaneryBlockEntities;
+import one.nxeu.arcanery.fabric.registry.ArcaneryDataComponents;
+import one.nxeu.arcanery.fabric.registry.ArcaneryItems;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
@@ -55,14 +63,35 @@ public class BrewersCauldronBlock extends BaseEntityBlock {
     }
 
     @Override
-    protected @NonNull InteractionResult useWithoutItem(@NonNull BlockState state, Level level, @NonNull BlockPos pos, @NonNull Player player, @NonNull BlockHitResult hitResult) {
+    protected @NonNull InteractionResult useItemOn(@NonNull ItemStack stack, @NonNull BlockState state, @NonNull Level level, @NonNull BlockPos pos, @NonNull Player player, @NonNull InteractionHand hand, @NonNull BlockHitResult hitResult) {
         final var entity = level.getBlockEntity(pos);
         if (entity instanceof BrewersCauldronBlockEntity brewersCauldron) {
-            final var containedElements = brewersCauldron.getContainedElements();
-            player.playSound(SoundEvents.RESPAWN_ANCHOR_CHARGE, 1.0F, 1.0F);
-            player.displayClientMessage(Component.literal("Contained Elements: " + containedElements.toString()), true);
-            return InteractionResult.SUCCESS;
+            if (stack.isEmpty()) {
+                final var containedElements = brewersCauldron.containedElements();
+                player.playSound(SoundEvents.RESPAWN_ANCHOR_CHARGE);
+                player.displayClientMessage(Component.literal("Contained Elements: " + containedElements.toString()), true);
+                return InteractionResult.SUCCESS;
+            }
+            if (stack.has(DataComponents.POTION_CONTENTS) && stack.getItem() instanceof PotionItem) {
+                final var potion = stack.get(DataComponents.POTION_CONTENTS);
+                final var elements = brewersCauldron.containedElements();
+                if (potion != null && potion.hasEffects()) return InteractionResult.PASS;
+                if (elements.isEmpty()) return InteractionResult.PASS;
+
+                if (player.gameMode() != GameType.CREATIVE) stack.setCount(stack.getCount() - 1);
+                final var result = ArcaneryItems.POTION_ITEM.getDefaultInstance();
+
+                result.set(ArcaneryDataComponents.ELEMENTS, elements);
+                level.playLocalSound(pos, SoundEvents.BREWING_STAND_BREW, SoundSource.BLOCKS, 1.0F, 1.0F, false);
+                brewersCauldron.clearContainedElements();
+
+                if (!player.getInventory().add(result)) {
+                    player.drop(result, false);
+                }
+                return InteractionResult.CONSUME;
+            }
         }
+
         return InteractionResult.PASS;
     }
 }

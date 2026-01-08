@@ -63,6 +63,17 @@ public class ElementData {
         return ElementData.of(air, death, earth, explosion, fire, life, magic, water);
     }
 
+    public boolean isEmpty() {
+        return air == 0f &&
+                death == 0f &&
+                earth == 0f &&
+                explosion == 0f &&
+                fire == 0f &&
+                life == 0f &&
+                magic == 0f &&
+                water == 0f;
+    }
+
     public ElementData merge(ElementData other) {
         return ElementData.of(
                 this.air + other.air,
