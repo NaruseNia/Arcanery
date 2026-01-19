@@ -31,6 +31,7 @@ import one.nxeu.arcanery.fabric.block.entity.BrewersCauldronBlockEntity;
 import one.nxeu.arcanery.fabric.registry.ArcaneryBlockEntities;
 import one.nxeu.arcanery.fabric.registry.ArcaneryDataComponents;
 import one.nxeu.arcanery.fabric.registry.ArcaneryItems;
+import one.nxeu.arcanery.fabric.util.LevelUtil;
 import one.nxeu.arcanery.fabric.util.ParticleUtil;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
@@ -80,46 +81,71 @@ public class BrewersCauldronBlock extends BaseEntityBlock {
     }
 
     @Override
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
+        final var entity = level.getBlockEntity(pos);
+        if (entity instanceof BrewersCauldronBlockEntity brewersCauldron) {
+            final var containedElements = brewersCauldron.containedElements();
+            spawnSplash(level, pos);
+            LevelUtil.whenClient(level, () -> {
+                player.displayClientMessage(Component.literal(containedElements.toFormattedString()), true);
+                player.playSound(SoundEvents.BOTTLE_FILL, 1.0F, 1.0F);
+            });
+            return InteractionResult.SUCCESS;
+        }
+        return InteractionResult.PASS;
+    }
+
+    @Override
     protected @NonNull InteractionResult useItemOn(@NonNull ItemStack stack, @NonNull BlockState state, @NonNull Level level, @NonNull BlockPos pos, @NonNull Player player, @NonNull InteractionHand hand, @NonNull BlockHitResult hitResult) {
         final var entity = level.getBlockEntity(pos);
         if (entity instanceof BrewersCauldronBlockEntity brewersCauldron) {
             if (stack.isEmpty()) {
                 final var containedElements = brewersCauldron.containedElements();
-                player.playSound(SoundEvents.RESPAWN_ANCHOR_CHARGE);
-                player.displayClientMessage(Component.literal(containedElements.toFormattedString()), true);
+                LevelUtil.whenServer(level, () -> {
+                    player.displayClientMessage(Component.literal(containedElements.toFormattedString()), true);
+                });
+                LevelUtil.whenClient(level, () -> {
+                    player.playSound(SoundEvents.BOTTLE_FILL, 1.0F, 1.0F);
+                });
                 spawnSplash(level, pos);
                 return InteractionResult.SUCCESS;
             }
             if (stack.getItem() instanceof BottleItem) {
                 final var elements = brewersCauldron.containedElements();
-                if (elements.isEmpty()) return InteractionResult.PASS;
+                if (elements.isEmpty()) return InteractionResult.SUCCESS;
+                LevelUtil.whenServer(level, () -> {
+                    if (player.gameMode() != GameType.CREATIVE) stack.setCount(stack.getCount() - 1);
+                    final var result = ArcaneryItems.POTION_ITEM.getDefaultInstance();
 
-                if (player.gameMode() != GameType.CREATIVE) stack.setCount(stack.getCount() - 1);
-                final var result = ArcaneryItems.POTION_ITEM.getDefaultInstance();
+                    result.set(ArcaneryDataComponents.ELEMENTS, elements);
+                    ParticleUtil.spawnServerParticle(
+                            level,
+                            SpellParticleOption.create(ParticleTypes.EFFECT, 0xffffff, 0.5f),
+                            pos.getX() + 0.5,
+                            pos.getY() + 1.0,
+                            pos.getZ() + 0.5,
+                            10,
+                            0.2,
+                            0.1,
+                            0.2,
+                            0.05
+                    );
+                    brewersCauldron.clearContainedElements();
 
-                result.set(ArcaneryDataComponents.ELEMENTS, elements);
-                level.playLocalSound(pos, SoundEvents.BREWING_STAND_BREW, SoundSource.BLOCKS, 1.0F, 1.0F, false);
-                ParticleUtil.spawnServerParticle(
-                        level,
-                        SpellParticleOption.create(ParticleTypes.EFFECT, 0xffffff, 0.5f),
-                        pos.getX() + 0.5,
-                        pos.getY() + 1.0,
-                        pos.getZ() + 0.5,
-                        10,
-                        0.2,
-                        0.1,
-                        0.2,
-                        0.05
-                );
-                brewersCauldron.clearContainedElements();
-
-                if (!player.getInventory().add(result)) {
-                    player.drop(result, false);
-                }
+                    if (!player.getInventory().add(result)) {
+                        player.drop(result, false);
+                    }
+                });
+                level.playSound(null, pos, SoundEvents.BOTTLE_FILL, SoundSource.BLOCKS, 1.0f, 1.0f);
+                level.playSound(null, pos, SoundEvents.BREWING_STAND_BREW, SoundSource.BLOCKS, 1.0f, 1.0f);
+                return InteractionResult.CONSUME;
+            }
+            if (brewersCauldron.processItems(stack, player.gameMode() != GameType.CREATIVE)) {
+                level.playSound(null, pos, SoundEvents.GENERIC_SWIM, SoundSource.BLOCKS, 1.0f, 1.0f);
                 return InteractionResult.CONSUME;
             }
         }
 
-        return InteractionResult.PASS;
+        return InteractionResult.SUCCESS;
     }
 }

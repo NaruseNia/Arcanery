@@ -87,6 +87,19 @@ public class ElementData {
         );
     }
 
+    public ElementData multiply(float factor) {
+        return ElementData.of(
+                this.air * factor,
+                this.death * factor,
+                this.earth * factor,
+                this.explosion * factor,
+                this.fire * factor,
+                this.life * factor,
+                this.magic * factor,
+                this.water * factor
+        );
+    }
+
     public void write(ValueOutput view) {
         view.putFloat("air", air);
         view.putFloat("death", death);
